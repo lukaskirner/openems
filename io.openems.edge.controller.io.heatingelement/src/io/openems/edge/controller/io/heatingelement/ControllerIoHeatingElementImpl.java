@@ -343,16 +343,11 @@ public class ControllerIoHeatingElementImpl extends AbstractOpenemsComponent
 			this.phase2.switchOff();
 			this.phase3.switchOff();
 			break;
-		case LEVEL_1:
-			this.phase1.switchOn();
-			this.phase2.switchOff();
-			this.phase3.switchOff();
-			break;
-		case LEVEL_2:
+		case LEVEL_1: // special implementation for local heating element which always requires to set two phases on
 			this.phase1.switchOn();
 			this.phase2.switchOn();
 			this.phase3.switchOff();
-			break;
+		case LEVEL_2:
 		case LEVEL_3:
 			this.phase1.switchOn();
 			this.phase2.switchOn();
