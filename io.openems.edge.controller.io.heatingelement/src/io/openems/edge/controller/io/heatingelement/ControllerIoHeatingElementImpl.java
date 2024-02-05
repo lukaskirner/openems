@@ -347,6 +347,7 @@ public class ControllerIoHeatingElementImpl extends AbstractOpenemsComponent
 			this.phase1.switchOn();
 			this.phase2.switchOn();
 			this.phase3.switchOff();
+			break;
 		case LEVEL_2:
 		case LEVEL_3:
 			this.phase1.switchOn();
