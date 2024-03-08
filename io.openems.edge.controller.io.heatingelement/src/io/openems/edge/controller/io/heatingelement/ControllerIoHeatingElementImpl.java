@@ -199,18 +199,17 @@ public class ControllerIoHeatingElementImpl extends AbstractOpenemsComponent
 		if (gridActivePower > 0) {
 			excessPower = 0;
 		} else {
-			excessPower = gridActivePower * -1 - essDischargePower
-					+ this.currentLevel.getValue() * this.config.powerPerPhase();
+			// 0 -> 0, 1 -> 0, 2 -> 1, 3 -> 2
+			int normalizedLevel = Math.max(0, this.currentLevel.getValue() - 1);
+			excessPower = gridActivePower * -1 - essDischargePower + normalizedLevel * this.config.powerPerPhase();
 		}
 
 		// Calculate Level from excessPower
 		Level targetLevel;
-		if (excessPower >= this.config.powerPerPhase() * 3) {
+		if (excessPower >= this.config.powerPerPhase() * 2) {
 			targetLevel = Level.LEVEL_3;
-		} else if (excessPower >= this.config.powerPerPhase() * 2) {
+		} else if (excessPower >= this.config.powerPerPhase() * 1) {
 			targetLevel = Level.LEVEL_2;
-		} else if (excessPower >= this.config.powerPerPhase()) {
-			targetLevel = Level.LEVEL_1;
 		} else {
 			targetLevel = Level.LEVEL_0;
 		}
@@ -343,12 +342,16 @@ public class ControllerIoHeatingElementImpl extends AbstractOpenemsComponent
 			this.phase2.switchOff();
 			this.phase3.switchOff();
 			break;
-		case LEVEL_1: // special implementation for local heating element which always requires to set two phases on
+		case LEVEL_1:
+			this.phase1.switchOn();
+			this.phase2.switchOff();
+			this.phase3.switchOff();
+			break;
+		case LEVEL_2:
 			this.phase1.switchOn();
 			this.phase2.switchOn();
 			this.phase3.switchOff();
 			break;
-		case LEVEL_2:
 		case LEVEL_3:
 			this.phase1.switchOn();
 			this.phase2.switchOn();
